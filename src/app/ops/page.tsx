@@ -23,6 +23,7 @@ export default function OpsPage() {
 
       <h2 className="text-lg font-semibold text-stone-900 mb-3">Inventory health</h2>
       <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-stone-100 text-stone-600">
             <tr>
@@ -51,10 +52,12 @@ export default function OpsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <h2 className="text-lg font-semibold text-stone-900 mb-3">Supplier scorecards</h2>
       <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-stone-100 text-stone-600">
             <tr>
@@ -89,10 +92,11 @@ export default function OpsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <h2 className="text-lg font-semibold text-stone-900 mb-3">Reservation density (this week)</h2>
-      <div className="rounded border border-stone-200 bg-white shadow-sm p-4 mb-10">
+      <div className="rounded border border-stone-200 bg-white shadow-sm p-4 mb-10 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-stone-500 text-xs">
             <tr>

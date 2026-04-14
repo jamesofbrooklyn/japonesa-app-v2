@@ -40,6 +40,7 @@ function RosterTable({
 }) {
   return (
     <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead className="bg-stone-100 text-stone-600">
           <tr>
@@ -82,6 +83,7 @@ function RosterTable({
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

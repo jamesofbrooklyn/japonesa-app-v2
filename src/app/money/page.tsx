@@ -76,6 +76,7 @@ export default function MoneyPage() {
         <div>
           <h2 className="text-lg font-semibold text-stone-900 mb-3">AP aging</h2>
           <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-stone-100 text-stone-600">
                 <tr>
@@ -100,6 +101,7 @@ export default function MoneyPage() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
           <div className="text-xs text-stone-500 mt-2">
             {php(apOverdue)} overdue (30+ days). Manila Wine has a stale 60d line — chase it.

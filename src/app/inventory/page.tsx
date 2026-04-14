@@ -38,6 +38,7 @@ export default function InventoryPage() {
       {/* SECTION 1 — Delivery Incoming */}
       <h2 className="text-lg font-semibold text-stone-900 mb-3">Delivery incoming</h2>
       <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-stone-100 text-stone-600">
             <tr>
@@ -66,6 +67,7 @@ export default function InventoryPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* SECTION 2 — Variance identification (the headline workflow) */}
@@ -80,6 +82,7 @@ export default function InventoryPage() {
         </div>
       ) : (
         <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-stone-100 text-stone-600">
               <tr>
@@ -115,6 +118,7 @@ export default function InventoryPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -123,6 +127,7 @@ export default function InventoryPage() {
         Purchase summary — Alamat / Japonesa shared sourcing
       </h2>
       <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10">
+        <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead className="bg-stone-100 text-stone-600">
             <tr>
@@ -166,6 +171,7 @@ export default function InventoryPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* SECTION 4 — Transfers between bars */}

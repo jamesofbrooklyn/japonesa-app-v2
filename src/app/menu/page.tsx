@@ -117,6 +117,7 @@ export default function MenuPage() {
             {CATEGORY_LABEL[cat] ?? cat} ({items.length})
           </h3>
           <div className="rounded border border-stone-200 overflow-hidden bg-white shadow-sm">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-stone-100 text-stone-600">
                 <tr>
@@ -149,6 +150,7 @@ export default function MenuPage() {
                   ))}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       ))}

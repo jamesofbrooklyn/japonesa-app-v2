@@ -28,7 +28,7 @@ export default function Sidebar() {
             <Link
               key={tab.href}
               href={tab.href as any}
-              className={`block px-3 py-2 rounded text-sm transition ${
+              className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
                 active
                   ? "bg-japonesa-red text-white"
                   : "text-stone-700 hover:bg-stone-100"
@@ -40,7 +40,7 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="mt-10 text-[10px] text-stone-400 leading-relaxed">
+      <div className="mt-10 text-xs text-stone-400 leading-relaxed">
         Wed–Tue week<br />
         Targets: 28-32% food · 26-30% labor · &lt;62% prime
       </div>
