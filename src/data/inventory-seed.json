@@ -1,0 +1,35 @@
+{
+  "source": "PHOTO-2026-04-14-14-08-27.jpg — Google Sheet: greens/produce delivery vs purchase reconciliation between Alamat Bar and Japonesa Bar",
+  "currency": "PHP",
+  "notes": "Two-bar shared sourcing model. Delivery form qty (what arrived at receiving) is reconciled against the purchase summary qty (what the supplier billed). Any delta is a variance to investigate.",
+  "transfers": {
+    "greens_total": { "jap_bar": 57887.19, "alamat_bar": 49768.49 },
+    "ice_tube_per_sack": { "alamat_bar": 11517.86, "japonesa_bar": 18750.00 },
+    "dry_ice": { "alamat_bar": 7420.57, "japonesa_bar": 6857.14 }
+  },
+  "items": [
+    { "sku": "PRD-BASIL", "description": "Basil Leaves", "unit": "kg" },
+    { "sku": "PRD-CALAM", "description": "Calamansi", "unit": "kg" },
+    { "sku": "PRD-CHIGRN", "description": "Chili Green (Sili Sigang)", "unit": "kg" },
+    { "sku": "PRD-CILAN", "description": "Cilantro (Wansoy)", "unit": "kg" },
+    { "sku": "PRD-CUCU", "description": "Cucumber", "unit": "kg" },
+    { "sku": "PRD-EDFLW", "description": "Edible Flower", "unit": "pack" },
+    { "sku": "PRD-EGGLG", "description": "Egg Fresh Large", "unit": "tray" },
+    { "sku": "PRD-GING", "description": "Ginger", "unit": "kg" },
+    { "sku": "PRD-GUAV", "description": "Guava", "unit": "kg" },
+    { "sku": "PRD-LANGKA", "description": "Langka", "unit": "kg" },
+    { "sku": "PRD-LEMUS", "description": "Lemon (US)", "unit": "kg" },
+    { "sku": "PRD-LMGRS", "description": "Lemongrass (Tanglad)", "unit": "kg" },
+    { "sku": "PRD-LIME", "description": "Lime (Dayap)", "unit": "pc" },
+    { "sku": "PRD-MNGRP", "description": "Mango Ripe", "unit": "kg" },
+    { "sku": "PRD-ORMD", "description": "Medium Orange", "unit": "pc" },
+    { "sku": "PRD-MELN", "description": "Melon", "unit": "pc" },
+    { "sku": "PRD-PNDLV", "description": "Pandan Leaves", "unit": "pack" },
+    { "sku": "PRD-PNAPL", "description": "Pineapple (Local)", "unit": "pc" },
+    { "sku": "PRD-ROSE", "description": "Rosemary", "unit": "pack" },
+    { "sku": "PRD-STRAW", "description": "Strawberry 250g", "unit": "pack" },
+    { "sku": "PRD-TARR", "description": "Tarragon", "unit": "pack" },
+    { "sku": "PRD-TOMA", "description": "Tomato", "unit": "kg" },
+    { "sku": "PRD-WMELN", "description": "Watermelon Seedless", "unit": "kg" }
+  ]
+}
