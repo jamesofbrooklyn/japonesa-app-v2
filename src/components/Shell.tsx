@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
+import UserMenu from "./UserMenu";
 
 const TABS = [
   { href: "/",          label: "Pulse",     icon: "◉" },
@@ -13,7 +14,16 @@ const TABS = [
   { href: "/money",     label: "Money",     icon: "₱" },
 ];
 
-export default function Shell({ children }: { children: React.ReactNode }) {
+interface ShellProps {
+  children: React.ReactNode;
+  user?: {
+    displayName: string;
+    role: "owner" | "manager";
+    concept: string | null;
+  };
+}
+
+export default function Shell({ children, user }: ShellProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -21,7 +31,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-stone-50">
       {/* Desktop sidebar — hidden below md */}
       <div className="hidden md:block shrink-0">
-        <Sidebar />
+        <Sidebar user={user} />
       </div>
 
       {/* Mobile overlay */}
@@ -38,7 +48,10 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             </div>
             <nav className="space-y-1 flex-1">
               {TABS.map((tab) => {
-                const active = pathname === tab.href;
+                const active =
+                  tab.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(tab.href);
                 return (
                   <Link
                     key={tab.href}
@@ -55,10 +68,31 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                   </Link>
                 );
               })}
+              {user?.role === "owner" && (
+                <Link
+                  href={"/admin/users" as any}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                    pathname.startsWith("/admin")
+                      ? "bg-japonesa-red text-white"
+                      : "text-stone-700 hover:bg-stone-100"
+                  }`}
+                >
+                  <span className="mr-3 text-base">🔐</span>
+                  Admin
+                </Link>
+              )}
             </nav>
             <div className="text-xs text-stone-400 leading-relaxed mt-4">
               Targets: 28–32% food · 26–30% labor · &lt;62% prime
             </div>
+            {user && (
+              <UserMenu
+                displayName={user.displayName}
+                role={user.role}
+                concept={user.concept}
+              />
+            )}
           </aside>
         </div>
       )}
