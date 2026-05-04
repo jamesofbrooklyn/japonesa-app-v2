@@ -2,22 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./Toast";
 
 export default function InviteForm() {
   const router = useRouter();
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"owner" | "manager">("manager");
   const [concept, setConcept] = useState("japonesa");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
     setLoading(true);
 
     const res = await fetch("/api/admin/invite", {
@@ -40,7 +40,7 @@ export default function InviteForm() {
       return;
     }
 
-    setSuccess(`Invited ${data.display_name} (${data.email})`);
+    toast.success(`Invited ${data.display_name} (${data.email})`);
     setEmail("");
     setDisplayName("");
     setPassword("");
@@ -130,13 +130,6 @@ export default function InviteForm() {
           {error}
         </div>
       )}
-
-      {success && (
-        <div className="rounded border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-          {success}
-        </div>
-      )}
-
       <button
         type="submit"
         disabled={loading}

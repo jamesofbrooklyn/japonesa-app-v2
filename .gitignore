@@ -6,3 +6,17 @@ node_modules
 .DS_Store
 .claude/
 tsconfig.tsbuildinfo
+.vercel
+
+# Confidential business data — never commit
+main database 2026/
+*.xlsx
+*.xls
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+
+# Editor swap files
+*.swp
+*.swo

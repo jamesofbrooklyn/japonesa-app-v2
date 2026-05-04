@@ -1,7 +1,10 @@
 import SectionHeader from "@/components/SectionHeader";
 import { CATEGORY_LABEL, CATEGORY_ORDER } from "@/lib/categories";
 import { php, pct } from "@/lib/kpis";
-import { MENU_PERF, QUADRANT_COUNTS } from "@/lib/mock";
+import { fetchMenuEngineering, type MenuItemSales } from "@/lib/queries";
+import { supabaseServer } from "@/lib/supabase-server";
+import { optionalAuth } from "@/lib/auth";
+import { getActiveConcept } from "@/lib/concept";
 
 const QUADRANT_META = {
   star: { label: "STARS", color: "bg-emerald-50 border-emerald-300 text-emerald-900", hint: "high margin · high velocity — protect & feature" },
@@ -10,11 +13,17 @@ const QUADRANT_META = {
   dog: { label: "DOGS", color: "bg-red-50 border-red-300 text-red-900", hint: "low margin · low velocity — cut or rework" },
 };
 
-export default function MenuPage() {
+export default async function MenuPage() {
+  const sb = await supabaseServer();
+  const auth = await optionalAuth();
+  const concept = auth ? await getActiveConcept(auth.profile) : undefined;
+  const menuData = await fetchMenuEngineering(sb, 30, concept);
+  const MENU_PERF = menuData.items;
+  const QUADRANT_COUNTS = menuData.quadrantCounts;
+
   const totalSKU = MENU_PERF.length;
   const totalContribution = MENU_PERF.reduce((a, b) => a + b.contribution, 0);
 
-  // ---- COGS breakdown (30d, derived from per-item cost × qty sold) ----
   const foodItems  = MENU_PERF.filter((m) => m.type === "food");
   const drinkItems = MENU_PERF.filter((m) => m.type === "drink");
   const foodSales   = foodItems.reduce((a, b)  => a + b.price * b.qty30d, 0);
@@ -43,6 +52,12 @@ export default function MenuPage() {
         subtitle={`${totalSKU} items · 30-day classification · contribution = margin × qty sold`}
       />
 
+      {menuData.source === "empty" && (
+        <div className="mb-4 rounded border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-800">
+          No sales data yet. Upload a POS CSV at /upload to populate menu engineering.
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <Stat label="Total SKUs" value={String(totalSKU)} />
         <Stat label="30d Contribution" value={php(totalContribution)} />
@@ -50,7 +65,6 @@ export default function MenuPage() {
         <Stat label="Avg Margin %" value={pct(MENU_PERF.reduce((a, b) => a + (b.margin / b.price), 0) / totalSKU)} />
       </div>
 
-      {/* ---- COGS Breakdown ---- */}
       <h2 className="text-lg font-semibold text-stone-900 mb-3">COGS vs Sales — 30 days</h2>
       <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden mb-10 max-w-2xl">
         <table className="w-full text-sm">
@@ -70,16 +84,14 @@ export default function MenuPage() {
               <td className="px-4 py-2 text-right tabular-nums">{php(totalSales)}</td>
               <td className="px-4 py-2 text-right tabular-nums">{php(totalCOGS)}</td>
               <td className="px-4 py-2 text-right tabular-nums">
-                <CogsBadge pct={totalCOGS / totalSales} lo={0.27} hi={0.33} />
+                <CogsBadge pct={totalSales > 0 ? totalCOGS / totalSales : 0} lo={0.27} hi={0.33} />
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <h2 className="text-lg font-semibold text-stone-900 mb-3">
-        Menu Engineering Quadrant
-      </h2>
+      <h2 className="text-lg font-semibold text-stone-900 mb-3">Menu Engineering Quadrant</h2>
       <div className="grid grid-cols-2 gap-3 mb-10 max-w-3xl">
         {(["star", "puzzle", "plowhorse", "dog"] as const).map((q) => {
           const meta = QUADRANT_META[q];
@@ -158,7 +170,7 @@ export default function MenuPage() {
   );
 }
 
-function PerfTable({ rows }: { rows: typeof MENU_PERF }) {
+function PerfTable({ rows }: { rows: MenuItemSales[] }) {
   return (
     <div className="rounded border border-stone-200 bg-white shadow-sm overflow-hidden">
       <table className="w-full text-sm">
@@ -197,7 +209,7 @@ function QuadrantBadge({ q }: { q: "star" | "puzzle" | "plowhorse" | "dog" }) {
 function CogsRow({ label, sales, cogs, loTarget, hiTarget }: {
   label: string; sales: number; cogs: number; loTarget: number; hiTarget: number;
 }) {
-  const pctVal = cogs / sales;
+  const pctVal = sales > 0 ? cogs / sales : 0;
   return (
     <tr className="border-t border-stone-100">
       <td className="px-4 py-2 text-stone-700 font-medium">{label}</td>

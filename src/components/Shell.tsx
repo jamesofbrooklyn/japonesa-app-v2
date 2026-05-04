@@ -4,15 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import UserMenu from "./UserMenu";
+import ConceptSwitcher from "./ConceptSwitcher";
 
 const TABS = [
-  { href: "/",          label: "Pulse",     icon: "◉" },
-  { href: "/menu",      label: "Menu",      icon: "🍣" },
-  { href: "/inventory", label: "Inventory", icon: "📦" },
-  { href: "/ops",       label: "Ops",       icon: "⚙︎" },
-  { href: "/team",      label: "Team",      icon: "👥" },
-  { href: "/money",     label: "Money",     icon: "₱" },
+  { href: "/",                label: "Pulse",     icon: "◉" },
+  { href: "/menu",            label: "Menu",      icon: "🍣" },
+  { href: "/inventory",       label: "Inventory", icon: "📦" },
+  { href: "/purchase-orders", label: "POs",       icon: "📋" },
+  { href: "/ops",             label: "Ops",       icon: "⚙︎" },
+  { href: "/team",            label: "Team",      icon: "👥" },
+  { href: "/money",           label: "Money",     icon: "₱" },
 ];
+
+const CONCEPT_LABELS: Record<string, string> = {
+  japonesa: "JAPONESA",
+  alamat: "ALAMAT",
+  tryst: "TRYST",
+};
 
 interface ShellProps {
   children: React.ReactNode;
@@ -21,9 +29,11 @@ interface ShellProps {
     role: "owner" | "manager";
     concept: string | null;
   };
+  activeConcept: string;
+  conceptOptions: readonly string[];
 }
 
-export default function Shell({ children, user }: ShellProps) {
+export default function Shell({ children, user, activeConcept, conceptOptions }: ShellProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -31,7 +41,11 @@ export default function Shell({ children, user }: ShellProps) {
     <div className="flex min-h-screen bg-stone-50">
       {/* Desktop sidebar — hidden below md */}
       <div className="hidden md:block shrink-0">
-        <Sidebar user={user} />
+        <Sidebar
+          user={user}
+          activeConcept={activeConcept}
+          conceptOptions={conceptOptions}
+        />
       </div>
 
       {/* Mobile overlay */}
@@ -42,10 +56,15 @@ export default function Shell({ children, user }: ShellProps) {
             onClick={() => setOpen(false)}
           />
           <aside className="relative z-10 w-64 bg-white h-full p-6 shadow-xl flex flex-col">
-            <div className="mb-8">
-              <div className="text-japonesa-red text-xl font-bold tracking-widest">JAPONESA</div>
+            <div className="mb-6">
+              <div className="text-japonesa-red text-xl font-bold tracking-widest">
+                {CONCEPT_LABELS[activeConcept] ?? activeConcept.toUpperCase()}
+              </div>
               <div className="text-xs text-stone-500 mt-1">Poblacion · Exec</div>
             </div>
+            {user?.role === "owner" && conceptOptions.length > 1 && (
+              <ConceptSwitcher currentConcept={activeConcept} options={conceptOptions} />
+            )}
             <nav className="space-y-1 flex-1">
               {TABS.map((tab) => {
                 const active =
@@ -69,18 +88,98 @@ export default function Shell({ children, user }: ShellProps) {
                 );
               })}
               {user?.role === "owner" && (
-                <Link
-                  href={"/admin/users" as any}
-                  onClick={() => setOpen(false)}
-                  className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
-                    pathname.startsWith("/admin")
-                      ? "bg-japonesa-red text-white"
-                      : "text-stone-700 hover:bg-stone-100"
-                  }`}
-                >
-                  <span className="mr-3 text-base">🔐</span>
-                  Admin
-                </Link>
+                <>
+                  <div className="text-[10px] uppercase tracking-wider text-stone-400 mt-4 mb-1 px-3">
+                    Owner
+                  </div>
+                  <Link
+                    href={"/upload" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/upload")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">📤</span>
+                    Upload
+                  </Link>
+                  <Link
+                    href={"/insights" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/insights")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">🧠</span>
+                    Insights
+                  </Link>
+                  <div className="text-[10px] uppercase tracking-wider text-stone-400 mt-4 mb-1 px-3">
+                    Admin
+                  </div>
+                  <Link
+                    href={"/admin/suppliers" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/admin/suppliers")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">🚚</span>
+                    Suppliers
+                  </Link>
+                  <Link
+                    href={"/admin/menu" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/admin/menu")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">📖</span>
+                    Menu items
+                  </Link>
+                  <Link
+                    href={"/admin/ingredients" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/admin/ingredients")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">🥢</span>
+                    Ingredients
+                  </Link>
+                  <Link
+                    href={"/admin/users" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname === "/admin/users"
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">🔐</span>
+                    Users
+                  </Link>
+                  <Link
+                    href={"/admin/audit" as any}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center px-3 py-3 rounded text-sm transition min-h-[44px] ${
+                      pathname.startsWith("/admin/audit")
+                        ? "bg-japonesa-red text-white"
+                        : "text-stone-700 hover:bg-stone-100"
+                    }`}
+                  >
+                    <span className="mr-3 text-base">📜</span>
+                    Audit log
+                  </Link>
+                </>
               )}
             </nav>
             <div className="text-xs text-stone-400 leading-relaxed mt-4">

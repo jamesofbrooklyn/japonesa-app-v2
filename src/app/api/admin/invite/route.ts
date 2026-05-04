@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { supabaseServer } from "@/lib/supabase-server";
 import { z } from "zod";
+import { apiError, apiValidationError } from "@/lib/api-helpers";
 
 const InvitePayload = z.object({
   email: z.string().email(),
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const parsed = InvitePayload.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
+    return apiValidationError(parsed.error, "admin:invite");
   }
 
   const { email, display_name, role, concept, password } = parsed.data;
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
     });
 
   if (createError) {
-    return NextResponse.json({ error: createError.message }, { status: 500 });
+    return apiError({ status: 500, message: "User creation failed", cause: createError, tag: "admin:invite" });
   }
 
   // Create the profile
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
   });
 
   if (profileError) {
-    return NextResponse.json({ error: profileError.message }, { status: 500 });
+    return apiError({ status: 500, message: "Profile creation failed", cause: profileError, tag: "admin:invite" });
   }
 
   return NextResponse.json({
